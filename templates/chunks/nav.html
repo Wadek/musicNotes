@@ -1,0 +1,43 @@
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+
+					<a class="navbar-brand" href="/">music N</i><i class="fa fa-circle">TES beta</i></a>
+
+        </div>
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li class="active"><a href="/">HOME</a></li>
+
+            {% if not user.is_authenticated %}
+            <li><a href="/accounts/apply">APPLY</a></li>
+            <li><a href="/accounts/login">LOGIN</a></li>
+            {% elif approval == 0 and not user.username == "admin" %}
+
+            <li><a href="/accounts/portal">CHECK APPROVAL STATUS</a></li>
+            <li><a href="/logout">LOGOUT</a></li>
+            {% elif user.username == "admin" %}
+            <li><a href="/accounts/portal">ADMIN PORTAL</a></li>
+            <li><a href="/logout">LOGOUT</a></li>
+            {% else %}
+            <li><a href="/accounts/portal">USER PORTAL</a></li>
+            <li><a href="/logout">LOGOUT</a></li>
+            {% endif %}
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
+
+
+	<div id="f">
+		<div class="container">
+			<div class="row centered">
+				Music Notes - 2016 beta
+			</div><!-- row -->
+		</div><!-- container -->
+	</div><!-- Footer -->
