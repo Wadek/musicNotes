@@ -8,11 +8,11 @@ from django.core.urlresolvers import reverse_lazy
 from .forms import RegistrationForm, LoginForm, PatientForm, PatientHealthConditionsForm, TempPatientDataForm, EMedicationForm, LabReportForm
 from django.template import RequestContext
 from django.views.generic import ListView
-from .models import PermissionsRole, Patient, PatientHealthConditions, TempPatientData, Alert,PatientAppt, Doctor, EMedication, LabReport, AddMedicalHistory
+from .models import PermissionsRole, Patient, PatientHealthConditions, TempPatientData, Alert,PatientAppt
 from .forms import RegistrationForm, LoginForm, PatientForm, PatientHealthConditionsForm, TempPatientDataForm, EMedicationForm
 from django.template import RequestContext
 from django.views.generic import ListView
-from .models import PermissionsRole, Patient, PatientHealthConditions, TempPatientData, Alert,PatientAppt, Doctor, EMedication
+from .models import PermissionsRole, Patient, TempPatientData 
 from django.shortcuts import render_to_response
 from .forms import PatientApptForm
 from django.template import RequestContext
@@ -23,7 +23,7 @@ import datetime
 
 #from django.shortcuts import redirect, get_object_or_404
 
-STAFF_APPROVAL_ROLES = ('admin', 'doctor', 'staff', 'nurse', 'lab')
+STAFF_APPROVAL_ROLES = ('admin')
 
 
 def AlertSender(request):
@@ -65,9 +65,6 @@ Homepage to display the main control panel or HomePage based on user authenticat
 '''
 
 def HomePageView(request):
-
-
-
 	#Model Definitions & Declarations
 	permissionModel = PermissionsRole
 	patientModel = Patient
@@ -85,7 +82,7 @@ def HomePageView(request):
 	#Assign a default authentication boolean
 	authenticated = False
 
-	# approvalSwitch = 0
+	approvalSwitch = 1
 
 	#Check to see if the user has logged into the system or not
 	if request.user.is_authenticated():
@@ -182,22 +179,21 @@ def PatientPortalView(request):
 	patientModel = Patient
 	userModel = User
 	tempModel = TempPatientData
-	conditions_complete = False
 	patient_model = Patient
 	conditions_model = PatientHealthConditions
 	alert_model = Alert
 
-	approvalSwitch = 0
+	approvalSwitch = 1
 
 	#Assign default permission role
 	permissionRoleForUser = 'pending'
 	medications_for_patient = ''
 
 	#Assign a default approval rating
-	approval = 0
+	approval = 1
 
 	#Assign a default authentication boolean
-	authenticated = False
+	authenticated = True
 
 	patient = -1
 
@@ -259,13 +255,13 @@ def PatientPortalView(request):
 						patient.save()
 
 			#If there health conditions are
-			if (total_health_condition_level > 40 and alert_sent == 1 and not Alert.objects.filter(alert_patient=patient)[:1].exists()):
-				if Alert.objects.filter(alert_patient=patient)[:1].exists():
-					patient.alertSent = 1
-					alert_sent = 1
-					alert_model = Alert(alert_patient = patient, alert_description = 'SENT BY HOSPITAL SYSTEM', alert_level = total_health_condition_level)
-					alert_model.save()
-					patient.save()
+			#if (total_health_condition_level > 40 and alert_sent == 1 and not Alert.objects.filter(alert_patient=patient)[:1].exists()):
+			#	if Alert.objects.filter(alert_patient=patient)[:1].exists():
+			#		patient.alertSent = 1
+			#		alert_sent = 1
+			#		alert_model = Alert(alert_patient = patient, alert_description = 'SENT BY HOSPITAL SYSTEM', alert_level = total_health_condition_level)
+			#		alert_model.save()
+			#		patient.save()
 
 
 
@@ -311,22 +307,6 @@ def PatientPortalView(request):
 			instance.save()
 			return HttpResponseRedirect('formsuccess')
 
-	#Get an array for allergies
-	if not request.user.username == "admin" and approval == 1 and permissionRoleForUser.role == 'patient':
-
-		if tempUserInformation.allergies is not None:
-			allergens = tempUserInformation.allergies.split(",")
-
-		if tempUserInformation.medications is not None:
-			med_conditions = tempUserInformation.medications.split(",")
-	else:
-		allergens = ""
-		med_conditions =""
-
-	alerts_count = Alert.objects.all().count()
-
-	doc_name = ''
-	appts = ''
 	if (not permissionRoleForUser == 'pending' and permissionRoleForUser.role == 'doctor'):
 
 		doc_obj = Doctor.objects.filter(doctor_user=request.user).get()
@@ -388,14 +368,8 @@ def PatientPortalView(request):
 		'roles': permissionRoleForUser,
 		'approval': approval,
 		'authenticated': authenticated,
-		'conditions_complete': conditions_complete,
 		'temp_user_data': tempUserInformation,
-		'allergens': allergens,
-		'med_conditions':med_conditions,
 		'alert_sent':alert_sent,
-		'alerts_count':alerts_count,
-		'doc_name' : doc_name,
-		'appts' : appts,
 		'current_patient' : current_patient,
 		'unapproved_patient_list' : unapproved_patient_list,
 		'unapproved_count' : unapproved_count,
@@ -582,7 +556,7 @@ def EmergencyAlerts(request):
 			#If request object from query exists, create a variable assignment on that object
 			permissionRoleForUser = permissionModel.objects.filter(user__username=request.user.username)[:1].get()
 
-			#If the person is a hospital member, then they will automatically be considered approved
+			#If the person is a member, then they will automatically be considered approved
 			if (permissionRoleForUser.role in STAFF_APPROVAL_ROLES):
 				approval = 1
 			else:

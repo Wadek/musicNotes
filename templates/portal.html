@@ -66,10 +66,10 @@
             <li><a href="/logout">LOGOUT</a></li>
             {% else %}
               {% if not roles.role == "patient" %}
-              <li class="active"><a href="/accounts/portal">HOSPITAL PORTAL</a></li>
+              <li class="active"><a href="/accounts/portal">PORTAL</a></li>
 
               {% else %}
-              <li class="active"><a href="/accounts/portal">PATIENT PORTAL</a></li>
+              <li class="active"><a href="/accounts/portal">USER PORTAL</a></li>
 
               {% endif %}
             <li><a href="/logout">LOGOUT</a></li>
@@ -92,65 +92,26 @@
       {% if user.username == "admin" %}
       <h2>Administrative Control Panel</h2><hr>
 
-      {% elif roles.role == "nurse" %}
-      <h2>Nurse Control Panel</h2><hr>
-
-      {% elif roles.role == "lab" %}
-      <h2>Lab Staff Control Panel</h2><hr>
-
-      {% elif roles.role == "doctor" %}
-      <h2>Doctor Control Panel</h2><h3>Welcome Dr. {{doc_name}}</h3><hr>
-
-      {% elif roles.role == "staff" %}
-       <h2>HSP Staff Control Panel</h2><hr>
-
       {% elif not roles.role == "patient" and not roles.role == "admin" %}
-      <h2>Hospital Control Panel</h2><hr>
+      <h2>User Panel</h2><hr>
 
       {% elif roles.role == "patient" %}
       <h2>{{temp_user_data.first_name|title}} {{temp_user_data.last_name|title}}'s {{roles.role|title}} Portal</h2><hr>
 
       {% endif %}
 
-      {% if not conditions_complete and not user.username == "admin" and roles.role = "patient" %}
-
-      <h3>Before Continuing Further, please <a href="/health_conditions">add your health conditions..</a></h3>
-
-      {% else %}
-
       {% if roles.role == 'patient' %}
       <div class="row">
         <div class="col-sm-4">
 
 <div class="box10">
-  <h5><center>IPIMS Identification Card</center></h5>
+  <h5><center>User Card</center></h5>
        <h1>{{temp_user_data.first_name|title}} {{temp_user_data.last_name|title}}</h1>
        <img src="http://4.bp.blogspot.com/-zsbDeAUd8aY/US7F0ta5d9I/AAAAAAAAEKY/UL2AAhHj6J8/s1600/facebook-default-no-profile-pic.jpg"><br>
       
           <p>
          <b>E-Mail Address:</b> {{temp_user_data.email}}<br>
-         <b>Address:</b> {{temp_user_data.address}}<br>
-         <b>SSN:</b> ***-**-****</br>
          <b>Phone Number:</b> {{temp_user_data.phone_number}}<br>
-         <b>DOB: </b>{{temp_user_data.DOB}}<br>
-         <b>Insurance Provider: </b>{{temp_user_data.insurance_provider}}<br>
-         <b>Policy Number:</b> {{temp_user_data.insurance_policy_number}}<br>
-        <p>
-         <b>Allergies:</b>
-       </p>
-            <ul>
-            {% for x in allergens %}
-            <li>{{x}}</li>
-            {% endfor %}
-          </ul>
-        <p>
-         <b>Medical Conditions:</b>
-       </p>
-            <ul>
-            {% for x in med_conditions %}
-            <li>{{x}}</li>
-            {% endfor %}
-          </ul>
 
        <br />
        <b><a href="/accounts/portal/update_account/">Update Your IPIMS Contact Card</a></b>
@@ -224,8 +185,6 @@
       </div>
 
       {% endif %}
-      {% endif %}
-
       {% endif %}
 
 		</div><!-- row -->

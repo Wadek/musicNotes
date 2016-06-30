@@ -6,6 +6,11 @@ from .models import Patient, PatientAppt, PatientHealthConditions, TempPatientDa
 from django.db import models
 from django import forms
 
+
+class UploadFileForm(forms.Form):
+        title = forms.CharField(max_length=50)
+        file = forms.FileField()
+
 class RegistrationForm(UserCreationForm):
     def __init__(self, *args, **kwargs):
         super(RegistrationForm, self).__init__(*args, **kwargs)
