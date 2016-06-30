@@ -66,6 +66,7 @@ urlpatterns = [
     url(r'^accounts/portal/view_appts_edit/(?P<pk>\d+)$', EditAppointmentPatientView, name="EditAppointmentPatientView"),
     url(r'^accounts/portal/appointment_revision/$', PatientReviseAppointmentView, name="PatientReviseAppointmentView"),
     url(r'^send_appt_update/$', SaveApptEditView, name="SaveApptEditView"),
+    url(r'^accounts/portal/upload/$', UploadFile, name="UploadFile"),
 
 
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

@@ -126,7 +126,7 @@ def HomePageView(request):
 
 
 '''''''''''''''''''''''''''''''''''''''''''''''''''
-Display chunks 
+Display chunks
 '''''''''''''''''''''''''''''''''''''''''''''''''''
 def ChunkView(request):
 	return render( request, 'chunks/nav.html')
@@ -755,7 +755,7 @@ def GenerateStatsView(request):
 	staff_roles = PermissionsRole.objects.exclude(role="patient").count()
 
 	patient = Patient.objects.filter(approved=1).all()
-	
+
 	for patients in patient:
 		all_accepted+=1
 
@@ -1017,7 +1017,7 @@ def ProcessPatientApproval(request):
 		#print primary_key_val
 		temp_object = TempPatientData.objects.filter(user_id=primary_key_val).get()
 
-		#Create a new patient object 
+		#Create a new patient object
 		p = Patient.objects.create(fill_from_application=temp_object, user=temp_object.user, approved=1, alertSent=0)
 		p.save()
 
@@ -1326,7 +1326,7 @@ def MedicalReportView(request):
 		}
 		return render(request,'upload_med_report.html', context)
 
-	else: 
+	else:
 		return render(request,'upload_med_report.html')
 
 def CreateMedicalReportView(request):
@@ -1403,9 +1403,9 @@ def EditAppointmentPatientView(request, pk):
 		if form.is_valid():
 			form.save()
 		else:
-			print form.errors
-			print 'invalid'
-	
+			print (form.errors)
+			print ('invalid')
+
 	context = {
 		'form': form,
 	}
@@ -1455,13 +1455,13 @@ def PatientReviseAppointmentView(request):
 				'current_appt' : current_appt,
 				'all_doctors' : all_doctors,
 				'appt_date' : appt_date,
-				'appt_doctor' : appt_doctor, 
-				'appt_pain_level' : appt_pain_level, 
-				'appt_medical_conditions' : appt_medical_conditions, 
-				'appt_allergies' : appt_allergies, 
-				'appt_user' : appt_user, 
-				'appt_current_health_con' : appt_current_health_con, 
-				'appt_resolved' : appt_resolved, 
+				'appt_doctor' : appt_doctor,
+				'appt_pain_level' : appt_pain_level,
+				'appt_medical_conditions' : appt_medical_conditions,
+				'appt_allergies' : appt_allergies,
+				'appt_user' : appt_user,
+				'appt_current_health_con' : appt_current_health_con,
+				'appt_resolved' : appt_resolved,
 				'patient_search_key' : patient_search_key,
 				'patient_appt_key' : patient_appt_key,
 			}
@@ -1511,3 +1511,12 @@ def SaveApptEditView(request):
 
 		#Return the patient to a success page
 		return HttpResponseRedirect('formsuccess')
+def UploadFile(request):
+	if request.method == 'POST':
+		form = UploadFileForm(request.POST, request.FILES)
+		if form.is_valid():
+			handle_uploaded_file(request.FILES['file'])
+			return HttpResponseRedirect('/success/url/')
+	else:
+		form = UploadFileForm()
+	return render(request, 'upload.html', {'form': form})

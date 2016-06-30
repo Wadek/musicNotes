@@ -86,3 +86,8 @@ class TempPatientDataForm(forms.ModelForm):
         }
         fields = '__all__'
         exclude = ['user', 'data_sent']
+
+
+class UploadFileForm(forms.Form):
+    title = forms.CharField(max_length=50)
+    file = forms.FileField()
